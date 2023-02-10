@@ -13,6 +13,7 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.nio.charset.Charset;
+import java.util.Calendar;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements CreateNdefMessageCallback {
@@ -53,8 +56,14 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
 
     @Override
     public NdefMessage createNdefMessage(NfcEvent event ) {//before the record can be sent it has to be in a message
-
-        String UserString = textView.getText().toString();// we get the text of the string that was entered in the textview
+        //Long tsLong = System.currentTimeMillis()/1000;
+        //String strLong = Long.toString(tsLong);
+        Date currentTime = Calendar.getInstance().getTime();
+        //String strLong = Date.toString(currentTime);
+        //Log.i("NumberGenerated", "strLong: "+ strLong);
+        //Date currentTime = Calendar.getInstance().getTime();
+        //String strLong = Long.toString(currentTime);
+        String UserString = textView.getText().toString()+ currentTime;// we get the text of the string that was entered in the textview
         byte[] StringBytes = UserString.getBytes(); // the string has to be converted to bytes.
 
         NdefRecord ndefRecordOut = new NdefRecord( // the record has to be created first then the message
