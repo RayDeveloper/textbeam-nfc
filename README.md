@@ -1,7 +1,8 @@
 # textbeam-nfc
-Android app to beam text to another device
 
-Devices used 
+This is an app where you can type text to be sent to another device via Android Beam. It uses the timestamp from the sending device.
+
+Devices used:
 
 Samsung Galaxy S6 (SM-G9201) : Android 7
 
@@ -9,16 +10,11 @@ HUAWEI P smart (FIG-LX1) : Android 9
 
 ---------------------
 
-This is the app where you can type text to be sent to another device
-
-<img src="https://user-images.githubusercontent.com/12537673/196013608-1c46eb95-a4ff-4e3c-8424-ac2dd13f061f.png" width="550" height="800">
+<img src="https://user-images.githubusercontent.com/12537673/218234131-6b416a87-b4f6-45cc-9619-004751582462.png" width="300" height="500">
 
 
-This is what it looks like when the text is received.
+This is what it looks like when the text is received on the other device.
 
-<img src="https://user-images.githubusercontent.com/12537673/196013600-add83457-e0fd-4ed4-bb62-f4ba1b0409f7.jpg" width="550" height="800">
-
-
-
+<img src="https://user-images.githubusercontent.com/12537673/218234156-2aa5671d-1926-46ba-9d13-0dfdf8b2d10c.jpg" width="300" height="500">
 
 
