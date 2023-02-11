@@ -4,7 +4,10 @@ package com.example.textbeam_nfc;
 import static android.nfc.NdefRecord.createMime;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.icu.text.SimpleDateFormat;
+import android.nfc.NfcManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -15,6 +18,7 @@ import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,26 +43,42 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
 
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
 
-         textView = (TextView) findViewById(R.id.textBeam);// references the textview for entering text
+            nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+             if (nfcAdapter == null) {
+                 Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }//end if
+            if (!nfcAdapter.isEnabled()){
+                //NFC is not on.
+                    Toast.makeText(this, "NFC is disabled. Please turn on in settings.", Toast.LENGTH_LONG).show();
 
-        // Check for available NFC Adapter
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (nfcAdapter == null) {
-            Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }//end if
+            }else{
+            //NFC is  on.
+            Toast.makeText(this, "NFC is enabled. You can begin transfer.", Toast.LENGTH_LONG).show();
 
-        // Register callback
-        nfcAdapter.setNdefPushMessageCallback(this, this);// if NFC is present then the call back will be used
-        //Accepts a callback that contains a createNdefMessage() which is
-        // called when a device is in range to beam data to. The callback lets you create the NDEF message only when necessary.
+            }
+            // NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
+            //  if (!nfcAdapter.isEnabled()) {
+            //    Intent intent = new Intent(Settings.ACTION_NFC_SETTINGS);
+            // NFC is available for device but not enabled
+            //}
+
+
+            textView = (TextView) findViewById(R.id.textBeam);// references the textview for entering text
+
+            // Check for available NFC Adapter
+
+            // Register callback
+            nfcAdapter.setNdefPushMessageCallback(this, this);// if NFC is present then the call back will be used
+            //Accepts a callback that contains a createNdefMessage() which is
+            // called when a device is in range to beam data to. The callback lets you create the NDEF message only when necessary.
     }//end onCreate
 
     @SuppressLint("NewApi")
@@ -86,6 +106,16 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
             processIntent(getIntent());
         }
+
+        if (!nfcAdapter.isEnabled()){
+            //NFC is not on.
+            Toast.makeText(this, "NFC is disabled. Please turn on in settings.", Toast.LENGTH_LONG).show();
+
+        }else{
+            //NFC is  on.
+            Toast.makeText(this, "NFC is enabled. You can begin transfer.", Toast.LENGTH_LONG).show();
+
+        }
     }
 
     @SuppressLint("MissingSuperCall")
@@ -105,4 +135,7 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
         // record 0 contains the MIME type, record 1 is the AAR, if present
         textView.setText(new String(msg.getRecords()[0].getPayload())); // sets the textview to the message
     }
+
+
+
 }//end Main Activity
