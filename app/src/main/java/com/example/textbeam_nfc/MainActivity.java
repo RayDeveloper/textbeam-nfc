@@ -3,6 +3,8 @@ package com.example.textbeam_nfc;
 
 import static android.nfc.NdefRecord.createMime;
 
+import android.annotation.SuppressLint;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -28,6 +30,9 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements CreateNdefMessageCallback {
 
+    @SuppressLint("NewApi")
+    private static final SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm:ss");// time format
+
 
     NfcAdapter nfcAdapter;
     TextView textView;
@@ -36,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
          textView = (TextView) findViewById(R.id.textBeam);// references the textview for entering text
 
@@ -54,16 +61,12 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
 
     }//end onCreate
 
+    @SuppressLint("NewApi")
     @Override
     public NdefMessage createNdefMessage(NfcEvent event ) {//before the record can be sent it has to be in a message
-        //Long tsLong = System.currentTimeMillis()/1000;
-        //String strLong = Long.toString(tsLong);
-        Date currentTime = Calendar.getInstance().getTime();
-        //String strLong = Date.toString(currentTime);
-        //Log.i("NumberGenerated", "strLong: "+ strLong);
-        //Date currentTime = Calendar.getInstance().getTime();
-        //String strLong = Long.toString(currentTime);
-        String UserString = textView.getText().toString()+ currentTime;// we get the text of the string that was entered in the textview
+
+        Date currentTime = Calendar.getInstance().getTime();// uses the time from the device
+        String UserString = textView.getText().toString()+" \nTimestamp:" +sdf3.format(currentTime);// we get the text of the string that was entered in the textview
         byte[] StringBytes = UserString.getBytes(); // the string has to be converted to bytes.
 
         NdefRecord ndefRecordOut = new NdefRecord( // the record has to be created first then the message
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onNewIntent(Intent intent) {
         // onResume gets called after this to handle the intent
