@@ -14,5 +14,6 @@
         android:gravity="start|top"
         android:inputType="textMultiLine"
         tools:layout_editor_absoluteX="9dp"
-        tools:layout_editor_absoluteY="16dp" />
+        tools:layout_editor_absoluteY="16dp"
+        android:text="Enter text to beam"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
