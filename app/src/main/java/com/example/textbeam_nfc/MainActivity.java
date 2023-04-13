@@ -26,10 +26,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -44,13 +46,14 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
     //TextView textView;
     EditText textBeam;
 
-
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+
 
             nfcAdapter = NfcAdapter.getDefaultAdapter(this);
              if (nfcAdapter == null) {
@@ -155,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
     }
 
 
+
     void processIntent(Intent intent) {
         TextView textView = (TextView) findViewById(R.id.textView2);
 
@@ -162,8 +166,26 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
                 NfcAdapter.EXTRA_NDEF_MESSAGES); //Extra containing an array of NdefMessage present on the discovered tag.
         // only one message sent during the beam
         NdefMessage msg = (NdefMessage) rawMsgs[0];
+        String msg1 = new String(msg.getRecords()[0].getPayload());
         // record 0 contains the MIME type, record 1 is the AAR, if present
         textView.setText(new String(msg.getRecords()[0].getPayload())); // sets the textview to the message
+        // Declaring an empty string array
+        String[] arr = null;
+        //int arr.size;
+        arr = msg1.split(" ");
+        int r = 0;
+       int i= 0;
+       // for (String s : arr) {
+          //   i = s.indexOf("Timestamp");
+            //Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+        //    r = i + 1;
+        //}
+
+        //System.out.println(arr[r]);
+
+        Toast.makeText(this, arr[arr.length-1], Toast.LENGTH_LONG).show();
+
+
     }
 
 
