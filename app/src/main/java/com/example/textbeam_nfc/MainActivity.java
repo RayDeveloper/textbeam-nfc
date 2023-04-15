@@ -3,6 +3,8 @@ package com.example.textbeam_nfc;
 
 import static android.nfc.NdefRecord.createMime;
 
+import static java.util.Date.parse;
+
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -26,20 +28,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.nio.charset.Charset;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements CreateNdefMessageCallback {
 
     @SuppressLint("NewApi")
-    private static final SimpleDateFormat sdf3 = new SimpleDateFormat("HH:mm:ss");// time format
+    private static final SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");// time format
+    Date received_date= new Date();
+    Date currentTime= new Date();
+    Date currentTime_check= new Date();
+    Date parsed_receivedDate= new Date();
 
 
     NfcAdapter nfcAdapter;
@@ -92,8 +101,9 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
     @Override
     public NdefMessage createNdefMessage(NfcEvent event ) {//before the record can be sent it has to be in a message
 
-        Date currentTime = Calendar.getInstance().getTime();// uses the time from the device
-        String UserString = textBeam.getText().toString()+" \nTimestamp:" +sdf3.format(currentTime);// we get the text of the string that was entered in the edittext
+        currentTime = Calendar.getInstance().getTime();// uses the time from the device
+        String UserString = textBeam.getText().toString()+" \nTimestamp:"+" " +sdf3.format(currentTime);// we get the text of the string that was entered in the edittext
+        System.out.println(sdf3.format(currentTime));
         byte[] StringBytes = UserString.getBytes(); // the string has to be converted to bytes.
 
         NdefRecord ndefRecordOut = new NdefRecord( // the record has to be created first then the message
@@ -159,7 +169,9 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     void processIntent(Intent intent) {
+        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
         TextView textView = (TextView) findViewById(R.id.textView2);
 
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
@@ -173,19 +185,58 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
         String[] arr = null;
         //int arr.size;
         arr = msg1.split(" ");
-        int r = 0;
-       int i= 0;
-       // for (String s : arr) {
-          //   i = s.indexOf("Timestamp");
-            //Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-        //    r = i + 1;
-        //}
+        //int r = 0;
+       //int i= 0;
+        try {
+            System.out.println(arr[arr.length - 1]);
+             String received_date = arr[arr.length - 1];
+            parsed_receivedDate = sdf3.parse(received_date);
+            System.out.println(parsed_receivedDate);
+            currentTime_check = Calendar.getInstance().getTime();
 
-        //System.out.println(arr[r]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
-        Toast.makeText(this, arr[arr.length-1], Toast.LENGTH_LONG).show();
+        String elapsed_Time = printDifference(parsed_receivedDate, currentTime_check);
 
 
+
+
+        Toast.makeText(this, elapsed_Time, Toast.LENGTH_LONG).show();
+
+
+    }
+
+
+    public String printDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        System.out.println("startDate : " + startDate);
+        System.out.println("endDate : "+ endDate);
+        System.out.println("different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        //System.out.printf(
+         //       "%d days, %d hours, %d minutes, %d seconds%n",
+          //      elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
+        return elapsedDays+" days,"+elapsedHours+"hours," +elapsedMinutes+" minutes,"+elapsedSeconds+" seconds" ;
     }
 
 
