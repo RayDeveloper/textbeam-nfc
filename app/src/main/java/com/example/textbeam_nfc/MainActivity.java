@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
     }
 
 
-    public String printDifference(Date startDate, Date endDate) {
+    public String printDifference(Date startDate, Date endDate) { //method to calculate the difference between the sending time and received time.
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
 
@@ -233,10 +233,7 @@ public class MainActivity extends AppCompatActivity implements CreateNdefMessage
 
         long elapsedSeconds = different / secondsInMilli;
 
-        //System.out.printf(
-         //       "%d days, %d hours, %d minutes, %d seconds%n",
-          //      elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
-        return elapsedDays+" days,"+elapsedHours+"hours," +elapsedMinutes+" minutes,"+elapsedSeconds+" seconds" ;
+        return elapsedDays+"days,"+elapsedHours+"hours," +elapsedMinutes+"minutes,"+elapsedSeconds+"seconds" ;
     }
 
 
